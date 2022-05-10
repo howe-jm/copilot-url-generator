@@ -15,28 +15,31 @@ function App() {
 
   // Create a function to generate a random https url
   const generateUrl = () => {
-    // Randomly generate a number between 1 and 10. If 1, return random words instead of generating a URL
-    const randomNumber = Math.floor(Math.random() * 10) + 1;
-    if (randomNumber === 1) {
-      // If 1, return random words instead of generating a URL
-      return randomWords();
+    // Create a 1 in 10 chance to generate an invalid url
+    const invalidUrl = Math.floor(Math.random() * 10) === 0;
+    // If the url is invalid, generate a random word
+    if (invalidUrl) {
+      // Return an improper URL that does not match the regex pattern
+      return randomWords() + ".com";
     }
+
     // Start with https:
     let url = "https://";
     // Add a random word to the url
     url += randomWords();
     // Create an array with common domain name extensions
-    const extensions = [".com", ".net", ".org", ".edu", ".gov", ".io", ".me", ".info", ".biz", ".co"];
+    const domainExtensions = [".com", ".net", ".org", ".edu", ".gov", ".io", ".me", ".info", ".biz", ".co"];
     // Add a random extension to the url
-    url += extensions[Math.floor(Math.random() * extensions.length)];
+    url += domainExtensions[Math.floor(Math.random() * domainExtensions.length)];
     // Add between 0 and 3 folder paths to the url
     for (let i = 0; i < Math.floor(Math.random() * 4); i++) {
       url += "/" + randomWords();
     }
     // Create an array with common url file extensions
     const fileExtensions = [".html", ".css", ".js", ".json", ".txt", ".pdf", ".jpg", ".jpeg", ".png", ".gif"];
-    // Flip a coin to add a file extension to the url
-    if (Math.floor(Math.random() * 2) === 1) {
+    // Ensure the url doesn't end with something from the domainExtensions array, then flip a coin to add a file extension
+    if (!domainExtensions.some((extension) => url.endsWith(extension)) && Math.floor(Math.random() * 2) === 1) {
+      // Add a random file extension to the url
       url += fileExtensions[Math.floor(Math.random() * fileExtensions.length)];
     }
 
